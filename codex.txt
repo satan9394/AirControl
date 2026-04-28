@@ -1,0 +1,27 @@
+• 变更要点：
+
+  - 新增 STATUS.md 总结需求与实现对比。
+  - config.py 增加手偏好、双手缩放、缩放灵敏度/阈值、Ctrl 辅助缩放、无手暂停帧数、恢复缓冲帧数、日志间隔等配置默认值。
+  - main.py：支持按配置选择左/右/任意手做主控；可用双手食指距离进行缩放（可选 Ctrl+滚轮模拟）；无手帧自动暂停事件、重新识别后缓冲恢复；打印周期性日
+    志；状态窗显示暂停/恢复提示。
+  - os_controller.py 新增 zoom，可模拟 Ctrl+滚轮缩放。
+  - 重写 aircontrol/ui.py：状态窗英文提示（含 UTF-8 提示），设置面板加入手偏好、双手缩放开关、Ctrl+缩放、缩放灵敏度/阈值等滑块，全部标签改为
+    ASCII，避免乱码。
+
+  文件参考：
+
+  - STATUS.md
+  - aircontrol/config.py
+  - main.py
+  - aircontrol/os_controller.py
+  - aircontrol/ui.py
+
+  注意/下一步：
+
+  - 缩放通过双手食指距离变化 → Ctrl+滚轮（可配置），需两手可见。
+  - 暂未跑实机测试；请在有摄像头的环境下 python main.py 验证缩放/暂停恢复逻辑与新设置面板。
+
+
+› Find and fix a bug in @filename
+
+  80% context left · ? for shortcuts
