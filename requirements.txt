@@ -1,6 +1,5 @@
 opencv-python
 mediapipe
 pyautogui
-pynput
 PySide6
 numpy

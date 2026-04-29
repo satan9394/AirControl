@@ -37,6 +37,7 @@ class GestureEngine:
         self.menu_start_ms = 0
         self.calib_start_ms = 0
         self.screenshot_start_ms = 0
+        self.screenshot_done = False
         self.dc_active = False
         self.dc_start_ms = 0
         self.right_tap_state = None
@@ -163,14 +164,16 @@ class GestureEngine:
             and not self._extended(pinky_tip, pinky_pip)
         )
         if three_fingers:
-            if self.screenshot_start_ms == 0:
+            if self.screenshot_start_ms == 0 and not self.screenshot_done:
                 self.screenshot_start_ms = ts_ms
-            elif ts_ms - self.screenshot_start_ms >= self.screenshot_hold_ms:
+            elif ts_ms - self.screenshot_start_ms >= self.screenshot_hold_ms and not self.screenshot_done:
                 events.append("screenshot")
                 self.mode = "screenshot"
                 self.screenshot_start_ms = 0
+                self.screenshot_done = True
         else:
             self.screenshot_start_ms = 0
+            self.screenshot_done = False
 
         if self.drag_active:
             self.mode = "drag"
