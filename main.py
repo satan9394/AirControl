@@ -53,7 +53,7 @@ def main():
         cfg.get("mirror_y"),
     )
     osctrl = OSController(cfg.get("use_win32_mouse"))
-    engine = GestureEngine(cfg.get("click_window_ms"), cfg.get("double_click_window_ms"), cfg.get("drag_hold_ms"), cfg.get("pinch_thresh"), cfg.get("right_tap_velocity"), cfg.get("scroll_speed"), cfg.get("menu_hold_ms"))
+    engine = GestureEngine(cfg.get("click_window_ms"), cfg.get("double_click_window_ms"), cfg.get("drag_hold_ms"), cfg.get("pinch_thresh"), cfg.get("right_tap_velocity"), cfg.get("scroll_speed"), cfg.get("menu_hold_ms"), cfg.get("screenshot_hold_ms"))
     app = None
     win = None
     preferred_hand = cfg.get("preferred_hand", "right")
@@ -64,6 +64,7 @@ def main():
     no_hand_pause_frames = int(cfg.get("no_hand_pause_frames"))
     resume_grace_frames = int(cfg.get("resume_grace_frames"))
     log_interval_sec = float(cfg.get("log_interval_sec"))
+    screenshot_dir = cfg.get("screenshot_dir") or ""
     if cfg.get("ui_enabled"):
         app, win = create_app(cfg.get("ui_opacity"), cfg.get("ui_help_enabled"))
         settings = create_settings(app, cfg, mapper, engine, osctrl, monitors)
@@ -191,6 +192,10 @@ def main():
                             cy = min(max(sum(ys) / len(ys), 0.0), 1.0)
                             mapper.update_roi((cx, cy), (cfg.get("roi_width"), cfg.get("roi_height")))
                             last_event = "Calibrated"
+                        elif e == "screenshot":
+                            path = osctrl.screenshot(screenshot_dir)
+                            print(f"[AirControl] Screenshot: {path}")
+                            last_event = "Screenshot"
                 if dual_hand_zoom and secondary_hand:
                     h1 = primary_hand[1]
                     h2 = secondary_hand[1]

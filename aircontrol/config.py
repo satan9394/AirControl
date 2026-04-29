@@ -53,6 +53,8 @@ class Config:
             "no_hand_pause_frames": 20,
             "resume_grace_frames": 8,
             "log_interval_sec": 5.0,
+            "screenshot_hold_ms": 1000,
+            "screenshot_dir": "",
         }
         if os.path.exists(self.path):
             try:

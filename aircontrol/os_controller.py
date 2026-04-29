@@ -31,6 +31,18 @@ class OSController:
     def scroll(self, clicks):
         pyautogui.scroll(clicks)
 
+    def screenshot(self, save_dir=""):
+        import os
+        from datetime import datetime
+        if not save_dir:
+            save_dir = os.path.join(os.path.expanduser("~"), "Desktop")
+        os.makedirs(save_dir, exist_ok=True)
+        filename = f"screenshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+        filepath = os.path.join(save_dir, filename)
+        img = pyautogui.screenshot()
+        img.save(filepath)
+        return filepath
+
     def zoom(self, delta, use_ctrl=True):
         """
         Zoom by simulating ctrl + scroll (Windows-friendly).

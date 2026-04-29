@@ -13,6 +13,7 @@ class GestureEngine:
         right_tap_velocity=0.06,
         scroll_speed=60,
         menu_hold_ms=1000,
+        screenshot_hold_ms=1000,
         refractory_ms=300,
     ):
         self.click_window_ms = click_window_ms
@@ -22,6 +23,7 @@ class GestureEngine:
         self.right_tap_velocity = right_tap_velocity
         self.scroll_speed = scroll_speed
         self.menu_hold_ms = menu_hold_ms
+        self.screenshot_hold_ms = screenshot_hold_ms
         self.refractory_ms = refractory_ms
         self.pinch_active = False
         self.drag_active = False
@@ -34,6 +36,7 @@ class GestureEngine:
         self.mode = "move"
         self.menu_start_ms = 0
         self.calib_start_ms = 0
+        self.screenshot_start_ms = 0
         self.dc_active = False
         self.dc_start_ms = 0
         self.right_tap_state = None
@@ -153,6 +156,22 @@ class GestureEngine:
         else:
             self.calib_start_ms = 0
 
+        three_fingers = (
+            self._extended(index_tip, index_pip)
+            and self._extended(middle_tip, middle_pip)
+            and self._extended(ring_tip, ring_pip)
+            and not self._extended(pinky_tip, pinky_pip)
+        )
+        if three_fingers:
+            if self.screenshot_start_ms == 0:
+                self.screenshot_start_ms = ts_ms
+            elif ts_ms - self.screenshot_start_ms >= self.screenshot_hold_ms:
+                events.append("screenshot")
+                self.mode = "screenshot"
+                self.screenshot_start_ms = 0
+        else:
+            self.screenshot_start_ms = 0
+
         if self.drag_active:
             self.mode = "drag"
         elif none_extended:
@@ -160,7 +179,7 @@ class GestureEngine:
         elif pinch:
             self.mode = "click"
         else:
-            if self.mode != "menu":
+            if self.mode not in ("menu", "screenshot"):
                 self.mode = "move"
 
         return events
